@@ -1,0 +1,53 @@
+﻿@page "/returnbook"
+@using BlazorLab.Data
+@using BlazorLab.Services
+@inject ILibraryService Librarian
+
+<PageTitle>Return Book</PageTitle>
+
+<h1>Return Book</h1>
+<h2>Borrowed Books</h2>
+<table style="width: 100%">
+	<tr>
+		<th>Book ID</th>
+		<th>Title</th>
+		<th>User ID</th>
+		<th>Username</th>
+	</tr>
+
+	@foreach (var item in Librarian.returnDictionary())
+		{
+			foreach (var book in item.Value)
+			{
+				<tr>
+					<th>@book.Id</th>
+					<th>@book.Title</th>
+					<th>@item.Key.Id</th>
+					<th>@item.Key.Name</th>
+				</tr>
+			}
+
+		}
+</table>
+User ID:
+<input type="number" @bind=userid />
+<br />
+Book ID:
+<input type="number" @bind=id />
+<br />
+<button @onclick=ReturnTheBook>Return Book</button>
+<br />
+@if(message != "")
+{
+	<p>@message</p>
+}
+@code{
+	int id;
+	int userid;
+	string message = "";
+	public async Task ReturnTheBook()
+	{
+		Librarian.ReturnBook(id, userid);
+		message = "Success! Book was returned.";
+	}
+}

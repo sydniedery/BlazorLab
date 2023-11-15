@@ -1,0 +1,69 @@
+﻿@page "/manageusers"
+@using BlazorLab.Data
+@using BlazorLab.Services
+@inject ILibraryService Librarian
+
+<PageTitle>Manage Users</PageTitle>
+
+<h1>Manage Users</h1>
+
+<br/><br />
+Username:<input type="text" @bind=username />
+Email:<input type="email" @bind=email />
+<button @onclick=AddUser>Add User</button>
+<button @onclick=DeleteUser>Delete User</button>
+<br/>
+Old Username:<input type="text" @bind=oldUsername />
+New Username: <input type="text" @bind=newUsername /><br/>
+Old Email:<input type="email" @bind=oldEmail />
+New Email: <input type="email" @bind=newEmail /><br/>
+<button @onclick=UpdateUser>Update User</button>
+<br/>
+<h1> List Of All Users</h1>
+<br/>
+
+<table style="width: 100%">
+	<tr>
+		<th>ID</th>
+		<th>Username</th>
+		<th>Email</th>
+	</tr>
+	@foreach (var value in Librarian.ListUsers())
+	{
+		<tr>
+			<td>@value.Id</td>
+			<td>@value.Name</td>
+			<td>@value.Email</td>
+		</tr>
+	}
+</table>
+
+
+@code{
+
+	string username = "";
+	string email = "";
+	string oldUsername = "";
+	string oldEmail = "";
+	string newUsername = "";
+	string newEmail = "";
+
+	User user = new User();
+	public async Task AddUser()
+	{
+		user.Name = username;
+		user.Email = email;
+		Librarian.AddUser(user);
+	}
+	public async Task DeleteUser()
+	{
+
+		Librarian.RemoveUser(email);
+	}
+
+	public async Task UpdateUser()
+	{
+		Librarian.EditUser(oldUsername, oldEmail, newUsername, newEmail);
+	}
+
+}

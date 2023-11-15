@@ -1,0 +1,79 @@
+﻿@page "/managebooks"
+@using BlazorLab.Data
+@using BlazorLab.Services
+@inject ILibraryService Librarian
+<PageTitle>Manage Books</PageTitle>
+
+<h1>Manage Books</h1>
+<h2>Add and Delete Books</h2>
+Title: <input type="text" @bind=title />
+Author: <input type="text" @bind=author />
+ISBN: <input type="text" @bind=isbn />
+<button @onclick=AddBook>Add Book</button>
+<button @onclick=DeleteBook>Delete Book</button>
+<h2>Edit Book:</h2>
+<br />
+ID: <input type="number" @bind=id />
+<br />
+Old Title: <input type="text" @bind=oldtitle />
+New Title: <input type="text" @bind=newtitle />
+<br />
+Old Author: <input type="text" @bind=oldauthor />
+New Author: <input type="text" @bind=newauthor />
+<br />
+Old ISBN: <input type="text" @bind=oldisbn />
+New ISBN: <input type="text" @bind=newisbn />
+<br />
+<button @onclick=EditBook>Edit Book</button>
+<br /><br />
+All Books:
+<table style="width: 100%">
+	<tr>
+		<th>ID</th>
+		<th>Title</th>
+		<th>Author</th>
+		<th>ISBN</th>
+	</tr>
+	@foreach (var value in Librarian.ListBooks())
+	{
+		<tr>
+			<td>@value.Id</td>
+			<td>@value.Title</td>
+			<td>@value.Author</td>
+			<td>@value.ISBN</td>
+		</tr>
+	}
+</table>
+@code{
+	string title = "";
+	string author = "";
+	string isbn = "";
+	string oldtitle = "";
+	string newtitle = "";
+	string oldauthor = "";
+	string newauthor = "";
+	string oldisbn = "";
+	string newisbn = "";
+	int id;
+
+	Book book = new Book();
+	public async Task AddBook()
+	{
+		book.Title = title;
+		book.Author = author;
+		book.ISBN = isbn;
+		Librarian.AddBook(book);
+
+	}
+
+	public async Task DeleteBook()
+	{
+		Librarian.RemoveBook(isbn);
+	}
+
+	public async Task EditBook()
+	{
+		Librarian.EditBook(id, newauthor, newtitle, newisbn);
+	}
+
+}
